@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { albumSheetColumns, getAlbums, getLives, liveSheetColumns } from "@/data/music";
+import { getAlbums, getLives } from "@/data/music";
 
 export default async function Home() {
   const albums = await getAlbums();
@@ -16,7 +16,7 @@ export default async function Home() {
         <div className="grid gap-8 lg:grid-cols-[1.6fr_0.9fr]">
           <div>
             <h1 className="max-w-xl text-4xl font-black tracking-tight text-white md:text-6xl">
-              내가 들은 음악을 한 번에 보여주는 아카이브
+              My Music Archive
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-zinc-300">
               앨범과 라이브를 한곳에서 정리하고, 스포티파이와 유튜브의 데이터와 내 감상을 함께 남깁니다.
@@ -40,18 +40,30 @@ export default async function Home() {
 
           <div className="rounded-2xl border border-white/10 bg-[#0d0d0d] p-5">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-400">
-              입력 방식
+              Find me
             </p>
-            <ul className="mt-4 space-y-4 text-sm text-zinc-200">
-              <li>
-                <span className="font-medium text-white">앨범</span>
-                <div className="mt-1 text-zinc-300">{albumSheetColumns.join(" / ")}</div>
-              </li>
-              <li>
-                <span className="font-medium text-white">라이브</span>
-                <div className="mt-1 text-zinc-300">{liveSheetColumns.join(" / ")}</div>
-              </li>
-            </ul>
+            <h2 className="mt-3 text-2xl font-bold text-white">SNS</h2>
+            <p className="mt-2 text-sm leading-6 text-zinc-300">
+              스포티파이에 앨범째로 듣는 음악들 ㄱㄱ
+            </p>
+            <div className="mt-5 flex flex-col gap-3">
+              <a
+                href="https://www.instagram.com/natekwon_0830/"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-between rounded-xl border border-white/10 px-4 py-3 text-sm font-medium text-white transition hover:border-white/30 hover:bg-white/5"
+              >
+                Instagram <span aria-hidden="true">↗</span>
+              </a>
+              <a
+                href="https://open.spotify.com/user/315ka6lwwgq354axxmho4npdbhya?si=7061fe6215a545a4"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-between rounded-xl border border-white/10 px-4 py-3 text-sm font-medium text-white transition hover:border-white/30 hover:bg-white/5"
+              >
+                Spotify <span aria-hidden="true">↗</span>
+              </a>
+            </div>
           </div>
         </div>
       </section>

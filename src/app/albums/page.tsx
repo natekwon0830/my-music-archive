@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAlbums } from "@/data/music";
+import AlbumLibrary from "./AlbumLibrary";
 
 export default async function AlbumsPage() {
   const albums = await getAlbums();
@@ -21,37 +22,7 @@ export default async function AlbumsPage() {
         </Link>
       </div>
 
-      <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {albums.map((album) => (
-          <article
-            key={album.id}
-            className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111] shadow-[0_0_25px_rgba(255,255,255,0.04)]"
-          >
-            <img
-              src={album.coverUrl}
-              alt={`${album.title} cover`}
-              className="h-64 w-full object-cover"
-            />
-            <div className="space-y-4 p-5">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h2 className="text-xl font-semibold text-white">{album.title}</h2>
-                  <p className="mt-1 text-sm text-zinc-300">{album.artist}</p>
-                </div>
-                <span className="rounded-full border border-white/10 bg-white px-2.5 py-1 text-sm font-semibold text-black">
-                  ★ {album.rating.toFixed(1)}
-                </span>
-              </div>
-
-              <div className="inline-flex rounded-full border border-white/10 bg-black/40 px-2.5 py-1 text-xs text-zinc-200">
-                {album.genre}
-              </div>
-
-              <p className="text-sm leading-6 text-zinc-300">{album.review}</p>
-            </div>
-          </article>
-        ))}
-      </section>
+      <AlbumLibrary initialAlbums={albums} />
     </main>
   );
 }
