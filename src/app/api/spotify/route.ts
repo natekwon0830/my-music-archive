@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     return Response.json({ error: "Spotify credentials are not configured" }, { status: 500 });
   }
 
-  const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(`album:${albumName} artist:${artistName}`)}&type=album&limit=1`;
+  const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(`album:${albumName} artist:${artistName}`)}&type=album&market=KR&limit=1`;
   const searchRes = await fetch(searchUrl, {
     headers: { Authorization: `Bearer ${token}` },
   });

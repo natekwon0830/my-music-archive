@@ -1,9 +1,12 @@
 import Link from "next/link";
-import { getAlbums, getLives } from "@/data/music";
+import { getAlbums, getLives, getVinylRecords } from "@/data/music";
 
 export default async function Home() {
-  const albums = await getAlbums();
-  const lives = await getLives();
+  const [albums, lives, vinylRecords] = await Promise.all([
+    getAlbums(),
+    getLives(),
+    getVinylRecords(),
+  ]);
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-12">
@@ -36,6 +39,12 @@ export default async function Home() {
                 라이브 보기
               </Link>
             </div>
+            <Link
+              href="/vinyls"
+              className="mt-4 inline-flex rounded-full border border-white/20 bg-white/5 px-5 py-3 font-semibold text-white transition hover:bg-white/10"
+            >
+              보유 LP 목록 보기
+            </Link>
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-[#0d0d0d] p-5">
@@ -88,6 +97,17 @@ export default async function Home() {
           <h2 className="mt-3 text-3xl font-bold text-white">내가 들은 라이브</h2>
           <p className="mt-3 text-zinc-300">
             현재 {lives.length}개 라이브가 등록되어 있습니다.
+          </p>
+        </Link>
+
+        <Link
+          href="/vinyls"
+          className="rounded-2xl border border-white/10 bg-[#111111] p-6 transition hover:border-white/30 hover:bg-[#171717] md:col-span-2"
+        >
+          <p className="text-sm uppercase tracking-[0.2em] text-zinc-300">Vinyl Collection</p>
+          <h2 className="mt-3 text-3xl font-bold text-white">보유 LP 목록</h2>
+          <p className="mt-3 text-zinc-300">
+            현재 {vinylRecords.length}장의 LP를 소장하고 있습니다.
           </p>
         </Link>
       </section>

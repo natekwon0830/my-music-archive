@@ -3,9 +3,17 @@
 import { useEffect, useMemo, useState } from "react";
 import type { AlbumEntry } from "@/data/music";
 
+function normalizeSearchText(value: string) {
+  return value
+    .normalize("NFKC")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
 export default function AlbumLibrary({ initialAlbums }: { initialAlbums: AlbumEntry[] }) {
   const [albums, setAlbums] = useState(initialAlbums);
-  const [artistQuery, setArtistQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("");
   const [ratingSort, setRatingSort] = useState("none");
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -21,16 +29,22 @@ export default function AlbumLibrary({ initialAlbums }: { initialAlbums: AlbumEn
   );
 
   const filteredAlbums = useMemo(() => {
-    const normalizedArtist = artistQuery.trim().toLocaleLowerCase();
+    const normalizedQuery = normalizeSearchText(searchQuery);
     const filtered = albums.filter((album) => {
-      const matchesArtist = album.artist.toLocaleLowerCase().includes(normalizedArtist);
-      const matchesGenre = !selectedGenre || album.genre.toLocaleLowerCase() === selectedGenre.toLocaleLowerCase();
-      return matchesArtist && matchesGenre;
+      const normalizedTitle = normalizeSearchText(album.title);
+      const normalizedArtist = normalizeSearchText(album.artist);
+      const matchesText =
+        !normalizedQuery ||
+        normalizedTitle.includes(normalizedQuery) ||
+        normalizedArtist.includes(normalizedQuery) ||
+        `${normalizedTitle} ${normalizedArtist}`.includes(normalizedQuery);
+      const matchesGenre = !selectedGenre || normalizeSearchText(album.genre) === normalizeSearchText(selectedGenre);
+      return matchesText && matchesGenre;
     });
     if (ratingSort === "ascending") filtered.sort((a, b) => a.rating - b.rating);
     if (ratingSort === "descending") filtered.sort((a, b) => b.rating - a.rating);
     return filtered;
-  }, [albums, artistQuery, selectedGenre, ratingSort]);
+  }, [albums, searchQuery, selectedGenre, ratingSort]);
 
   async function refreshAlbums() {
     setIsRefreshing(true);
@@ -55,12 +69,12 @@ export default function AlbumLibrary({ initialAlbums }: { initialAlbums: AlbumEn
     <>
       <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-white/10 bg-[#111111] p-4 sm:flex-row sm:items-end">
         <label className="flex-1 text-sm text-zinc-300">
-          아티스트 검색
+          제목 / 아티스트 검색
           <input
             type="search"
-            value={artistQuery}
-            onChange={(event) => setArtistQuery(event.target.value)}
-            placeholder="아티스트 이름 입력"
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            placeholder="제목 또는 아티스트 입력"
             className="mt-2 w-full rounded-xl border border-white/15 bg-black px-4 py-3 text-white outline-none placeholder:text-zinc-500 focus:border-white/50"
           />
         </label>
@@ -127,6 +141,14 @@ export default function AlbumLibrary({ initialAlbums }: { initialAlbums: AlbumEn
                     ★ {album.rating.toFixed(1)}
                   </span>
                 </div>
+
+                {album.bestTrack ? (
+                  <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-zinc-500">Best Track</p>
+                    <p className="mt-1 text-sm font-medium text-white">{album.bestTrack}</p>
+                  </div>
+                ) : null}
+
                 <div className="inline-flex rounded-full border border-white/10 bg-black/40 px-2.5 py-1 text-xs text-zinc-200">
                   {album.genre}
                 </div>
